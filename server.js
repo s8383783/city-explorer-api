@@ -11,10 +11,17 @@ const app = express();
 app.use(cors());
 const PORT = process.env.PORT || 3001;
 
-app.get('/,' (request, response) => response.status(200).send('This is the root.'));
+app.get('/', (request, response) => response.status(200).send('This is the root.'));
 
-app.get('*', (request, response) => {
-    response.status(404).send('Page not found.');
+app.get('/weather', (request, response) => {
+const lat = request.query.lat;
+const lon = request.query.lon;
+const searchQuery = request.query.searchQuery;
 });
 
-app.listen(PORT, () => console.log('Listening on Port', PORT)
+
+app.get('*', (request, response) => {
+  response.status(404).send('Page not found.');
+});
+
+app.listen(PORT, () => console.log('Listening on Port', PORT));
