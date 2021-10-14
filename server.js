@@ -14,9 +14,21 @@ const PORT = process.env.PORT || 3001;
 app.get('/', (request, response) => response.status(200).send('This is the root.'));
 
 app.get('/weather', (request, response) => {
-const lat = request.query.lat;
-const lon = request.query.lon;
-const searchQuery = request.query.searchQuery;
+  let { lat, lon, searchQuery } = request.query;
+  console.log(lat, lon, searchQuery);
+  try {
+    let foundCity = weather.find(city => city.city_name.toLowerCase() === searchQuery.toLowerCase());
+    const weatherArray = foundCity.data.map(day => {
+      return new Forecast(day);
+    });
+    response.status(200).send(weatherArray);
+  }
+  catch (error) {
+    console.log('error');
+    response.status(404).send('Unable to locate city');
+  }
+ 
+
 });
 
 
@@ -25,3 +37,10 @@ app.get('*', (request, response) => {
 });
 
 app.listen(PORT, () => console.log('Listening on Port', PORT));
+
+class Forecast {
+  constructor(day){
+    this.date = day.valid_date;
+    this.description = `Low of ${day.low_temp}, high of ${day.max_temp}  with ${day.weather.description}`;
+  }
+}
