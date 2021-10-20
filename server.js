@@ -41,10 +41,11 @@ app.get('*', (request, response) => {
 
 async function getWeather(request, response) {
   let wURL = ` https://api.weatherbit.io/v2.0/forecast/daily?key=${process.env.WEATHER_KEY}&lat=${request.query.lat}&lon=${request.query.lon}`;
-  console.log(wURL);
+  
   try {
     let getForecast = await axios.get(wURL);
-    response.status(200).send(getForecast.data);
+    response.status(200).send(getForecast.data.data);
+    console.log(getForecast.data.data);
   }
   catch (error) {
     response.status(404).send('Woops!');
@@ -52,7 +53,7 @@ async function getWeather(request, response) {
   }
 }
 async function getMovies(request, response) {
-  const city = request.query.searchQuery;
+  const city = request.query.query;
   let mURL = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_KEY}&query=${city}`;
   console.log(mURL);
   try {
